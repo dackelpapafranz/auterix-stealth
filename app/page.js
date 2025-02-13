@@ -90,14 +90,14 @@ const LandingPage = () => {
 
         <section className="container mx-auto px-6 py-24">
           <div className="max-w-3xl">
-            <h1 className="text-5xl font-bold mb-6">
-              Dein Auto, deine Regeln – mit Leasing-Option schneller verkaufen.
+            <h1 className="text-4xl md:text-5xl font-bold mb-6">
+              Dein Auto, deine Regeln – mit Leasingoption schneller verkaufen.
             </h1>
-            <p className="text-xl text-gray-300 mb-8">
-              Mit auterix machst du dein Inserat im Handumdrehen leasingfähig und erreichst mehr Käufer für einen schnelleren Verkauf.
+            <p className="text-lg md:text-xl text-gray-300 mb-8">
+              Mit auterix machst du dein Auto im Handumdrehen leasbar und erreichst einen schnelleren Verkauf.
             </p>
-            <form onSubmit={handleSubmit} className="max-w-md">
-              <div className="flex gap-2">
+            <form onSubmit={handleSubmit} className="w-full max-w-md">
+              <div className="flex flex-col sm:flex-row gap-2">
                 <input 
                   type="email" 
                   placeholder="Enter your email" 
