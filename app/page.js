@@ -91,7 +91,7 @@ const LandingPage = () => {
         <section className="container mx-auto px-6 py-24">
           <div className="max-w-3xl">
             <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              Dein Auto, deine Regeln – mit Leasingoption schneller verkaufen.
+              Dein Auto, Deine Regeln – Leasingoption nutzen, schnell und sicher verkaufen.
             </h1>
             <p className="text-lg md:text-xl text-gray-300 mb-8">
               Mit auterix machst du dein Auto im Handumdrehen leasbar und erreichst einen schnelleren Verkauf.
