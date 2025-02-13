@@ -94,7 +94,7 @@ const LandingPage = () => {
               Dein Auto, Deine Regeln – Leasingoption nutzen, schnell und sicher verkaufen.
             </h1>
             <p className="text-lg md:text-xl text-gray-300 mb-8">
-              Mit auterix machst du dein Auto im Handumdrehen leasbar und erreichst einen schnelleren Verkauf.
+              Mit auterix machst du dein Auto in wenigen Minuten leasbar und verkaufst in kurzer Zeit.
             </p>
             <form onSubmit={handleSubmit} className="w-full max-w-md">
               <div className="flex flex-col sm:flex-row gap-2">
