@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useEffect, useState } from 'react';
 
 const StarryBackground = () => {
@@ -48,8 +50,29 @@ const LandingPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitStatus('success');
-    setEmail('');
+    
+    try {
+      const response = await fetch('https://formsubmit.co/mail@franzdoerr.com', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          email: email,
+          _subject: 'New Waitlist Signup from auterix'
+        })
+      });
+
+      if (response.ok) {
+        setSubmitStatus('success');
+        setEmail('');
+      } else {
+        setSubmitStatus('error');
+      }
+    } catch (error) {
+      setSubmitStatus('error');
+    }
   };
 
   return (
