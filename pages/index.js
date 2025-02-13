@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
-export default function Home() {
+export default function StealthLanding() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
@@ -14,8 +14,32 @@ export default function Home() {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-black text-white">
-      <div className="bg-gray-900 p-6 rounded-2xl shadow-xl w-96 text-center">
+    <div className="relative flex items-center justify-center h-screen bg-black text-white overflow-hidden">
+      {/* Moving Background Elements */}
+      {[...Array(30)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute bg-white rounded-full"
+          style={{
+            width: `${Math.random() * 5 + 2}px`,
+            height: `${Math.random() * 5 + 2}px`,
+            top: `${Math.random() * 100}vh`,
+            left: `${Math.random() * 100}vw`,
+            opacity: Math.random() * 0.8 + 0.2,
+          }}
+          animate={{
+            y: ["0vh", "100vh"],
+            opacity: [1, 0],
+          }}
+          transition={{
+            duration: Math.random() * 5 + 5,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+        />
+      ))}
+      
+      <div className="bg-gray-900 p-6 rounded-2xl shadow-xl w-96 text-center relative z-10">
         <motion.h1
           className="text-2xl font-bold"
           initial={{ opacity: 0, y: -10 }}
