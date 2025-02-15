@@ -113,12 +113,12 @@ const ContactModal = ({ isOpen, onClose }) => {
           </div>
         ) : (
           <>
-            <h2 className="text-xl font-bold mb-4">Contact Us</h2>
+            <h2 className="text-xl font-bold mb-4">Kontakt</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <input
                   type="text"
-                  placeholder="Your Name"
+                  placeholder="Dein Name"
                   className="w-full px-4 py-2 bg-gray-700 rounded-lg border border-gray-600 text-white placeholder-gray-400"
                   required
                   value={formData.name}
@@ -129,7 +129,7 @@ const ContactModal = ({ isOpen, onClose }) => {
               <div>
                 <input
                   type="email"
-                  placeholder="Your Email"
+                  placeholder="Deine E-Mail-Adresse"
                   className="w-full px-4 py-2 bg-gray-700 rounded-lg border border-gray-600 text-white placeholder-gray-400"
                   required
                   value={formData.email}
@@ -139,7 +139,7 @@ const ContactModal = ({ isOpen, onClose }) => {
               </div>
               <div>
                 <textarea
-                  placeholder="Your Message"
+                  placeholder="Deine Nachricht"
                   rows="4"
                   className="w-full px-4 py-2 bg-gray-700 rounded-lg border border-gray-600 text-white placeholder-gray-400"
                   required
@@ -156,10 +156,10 @@ const ContactModal = ({ isOpen, onClose }) => {
                 {isSubmitting ? (
                   <div className="flex items-center justify-center">
                     <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                    Sending...
+                    Wird gesendet...
                   </div>
                 ) : (
-                  'Send Message'
+                  'Nachricht senden'
                 )}
               </button>
             </form>
@@ -216,7 +216,7 @@ const LandingPage = () => {
               onClick={() => setIsContactModalOpen(true)}
               className="px-6 py-2 bg-blue-600 rounded-lg hover:bg-blue-500 active:bg-blue-700 transition-colors duration-150"
             >
-              Contact Us
+              Kontakt
             </button>
           </div>
         </nav>
@@ -233,7 +233,7 @@ const LandingPage = () => {
               <div className="flex flex-col sm:flex-row gap-2">
                 <input 
                   type="email" 
-                  placeholder="Enter your email" 
+                  placeholder="Gebe deine E-Mail-Adresse ein" 
                   className="flex-1 px-4 py-3 bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-lg focus:outline-none focus:border-blue-500 text-white placeholder-gray-400"
                   required
                   value={email}
