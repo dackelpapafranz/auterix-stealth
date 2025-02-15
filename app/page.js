@@ -58,7 +58,7 @@ const ContactModal = ({ isOpen, onClose }) => {
     setIsSubmitting(true);
     
     try {
-      const response = await fetch('https://formsubmit.co/franz@auterix.com', {
+      const response = await fetch('https://formsubmit.co/ajax/franz@auterix.com', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -74,9 +74,11 @@ const ContactModal = ({ isOpen, onClose }) => {
       if (response.ok) {
         setIsSuccess(true);
       } else {
+        console.error('Form submission failed:', await response.text());
         alert('Something went wrong. Please try again.');
       }
     } catch (error) {
+      console.error('Form submission error:', error);
       alert('Something went wrong. Please try again.');
     } finally {
       setIsSubmitting(false);
@@ -177,7 +179,7 @@ const LandingPage = () => {
     e.preventDefault();
     
     try {
-      const response = await fetch('https://formsubmit.co/franz@auterix.com', {
+      const response = await fetch('https://formsubmit.co/ajax/franz@auterix.com', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -194,9 +196,11 @@ const LandingPage = () => {
         setSubmitStatus('success');
         setEmail('');
       } else {
+        console.error('Waitlist submission failed:', await response.text());
         setSubmitStatus('error');
       }
     } catch (error) {
+      console.error('Waitlist submission error:', error);
       setSubmitStatus('error');
     }
   };
