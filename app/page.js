@@ -50,9 +50,13 @@ const ContactModal = ({ isOpen, onClose }) => {
     email: '',
     message: ''
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    
     try {
       const response = await fetch('https://formsubmit.co/franz@auterix.com', {
         method: 'POST',
@@ -68,12 +72,24 @@ const ContactModal = ({ isOpen, onClose }) => {
       });
 
       if (response.ok) {
-        alert('Thank you for your message. We will get back to you soon!');
-        onClose();
+        setIsSuccess(true);
+      } else {
+        alert('Something went wrong. Please try again.');
       }
     } catch (error) {
       alert('Something went wrong. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
+  };
+
+  const handleClose = () => {
+    onClose();
+    // Reset form state after modal is closed
+    setTimeout(() => {
+      setFormData({ name: '', email: '', message: '' });
+      setIsSuccess(false);
+    }, 300);
   };
 
   if (!isOpen) return null;
@@ -82,50 +98,71 @@ const ContactModal = ({ isOpen, onClose }) => {
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div className="bg-gray-800 rounded-lg w-full max-w-md p-6 relative">
         <button 
-          onClick={onClose}
+          onClick={handleClose}
           className="absolute top-4 right-4 text-gray-400 hover:text-white"
         >
           ✕
         </button>
-        <h2 className="text-xl font-bold mb-4">Contact Us</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <input
-              type="text"
-              placeholder="Your Name"
-              className="w-full px-4 py-2 bg-gray-700 rounded-lg border border-gray-600 text-white placeholder-gray-400"
-              required
-              value={formData.name}
-              onChange={(e) => setFormData({...formData, name: e.target.value})}
-            />
+        
+        {isSuccess ? (
+          <div className="text-center py-8">
+            <h2 className="text-xl font-bold mb-4">Deine Nachricht wurde erfolgreich versandt.</h2>
+            <p className="text-gray-300">Unser Team meldet sich umgehend bei dir.</p>
           </div>
-          <div>
-            <input
-              type="email"
-              placeholder="Your Email"
-              className="w-full px-4 py-2 bg-gray-700 rounded-lg border border-gray-600 text-white placeholder-gray-400"
-              required
-              value={formData.email}
-              onChange={(e) => setFormData({...formData, email: e.target.value})}
-            />
-          </div>
-          <div>
-            <textarea
-              placeholder="Your Message"
-              rows="4"
-              className="w-full px-4 py-2 bg-gray-700 rounded-lg border border-gray-600 text-white placeholder-gray-400"
-              required
-              value={formData.message}
-              onChange={(e) => setFormData({...formData, message: e.target.value})}
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full px-6 py-2 bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Send Message
-          </button>
-        </form>
+        ) : (
+          <>
+            <h2 className="text-xl font-bold mb-4">Contact Us</h2>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <input
+                  type="text"
+                  placeholder="Your Name"
+                  className="w-full px-4 py-2 bg-gray-700 rounded-lg border border-gray-600 text-white placeholder-gray-400"
+                  required
+                  value={formData.name}
+                  onChange={(e) => setFormData({...formData, name: e.target.value})}
+                  disabled={isSubmitting}
+                />
+              </div>
+              <div>
+                <input
+                  type="email"
+                  placeholder="Your Email"
+                  className="w-full px-4 py-2 bg-gray-700 rounded-lg border border-gray-600 text-white placeholder-gray-400"
+                  required
+                  value={formData.email}
+                  onChange={(e) => setFormData({...formData, email: e.target.value})}
+                  disabled={isSubmitting}
+                />
+              </div>
+              <div>
+                <textarea
+                  placeholder="Your Message"
+                  rows="4"
+                  className="w-full px-4 py-2 bg-gray-700 rounded-lg border border-gray-600 text-white placeholder-gray-400"
+                  required
+                  value={formData.message}
+                  onChange={(e) => setFormData({...formData, message: e.target.value})}
+                  disabled={isSubmitting}
+                />
+              </div>
+              <button
+                type="submit"
+                className="w-full px-6 py-2 bg-blue-600 rounded-lg hover:bg-blue-500 active:bg-blue-700 transition-colors duration-150 relative"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <div className="flex items-center justify-center">
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                    Sending...
+                  </div>
+                ) : (
+                  'Send Message'
+                )}
+              </button>
+            </form>
+          </>
+        )}
       </div>
     </div>
   );
@@ -173,7 +210,7 @@ const LandingPage = () => {
             <div className="text-2xl font-bold lowercase">auterix</div>
             <button 
               onClick={() => setIsContactModalOpen(true)}
-              className="px-6 py-2 bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+              className="px-6 py-2 bg-blue-600 rounded-lg hover:bg-blue-500 active:bg-blue-700 transition-colors duration-150"
             >
               Contact Us
             </button>
@@ -183,10 +220,10 @@ const LandingPage = () => {
         <section className="container mx-auto px-6 py-24">
           <div className="max-w-3xl">
             <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              Dein Auto, deine Regeln – mit Leasingoption schneller verkaufen.
+              Dein Auto, Deine Regeln – Leasingoption nutzen, schnell und sicher verkaufen.
             </h1>
             <p className="text-lg md:text-xl text-gray-300 mb-8">
-              Mit auterix machst du dein Auto im Handumdrehen leasbar und erreichst einen schnelleren Verkauf.
+              Mit auterix machst du dein Auto in wenigen Minuten leasbar und verkaufst problemlos in kurzer Zeit.
             </p>
             <form onSubmit={handleSubmit} className="w-full max-w-md">
               <div className="flex flex-col sm:flex-row gap-2">
@@ -200,7 +237,7 @@ const LandingPage = () => {
                 />
                 <button 
                   type="submit" 
-                  className="px-6 py-3 bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors whitespace-nowrap"
+                  className="px-6 py-3 bg-blue-600 rounded-lg hover:bg-blue-500 active:bg-blue-700 transition-colors duration-150 whitespace-nowrap"
                 >
                   Join Waitlist
                 </button>
