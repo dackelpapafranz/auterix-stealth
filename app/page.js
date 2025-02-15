@@ -44,15 +44,103 @@ const StarryBackground = () => {
   );
 };
 
+const ContactModal = ({ isOpen, onClose }) => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: ''
+  });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch('https://formsubmit.co/franz@auterix.com', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          ...formData,
+          _subject: 'New Contact Request from auterix',
+          _cc: 'martin@auterix.com'
+        })
+      });
+
+      if (response.ok) {
+        alert('Thank you for your message. We will get back to you soon!');
+        onClose();
+      }
+    } catch (error) {
+      alert('Something went wrong. Please try again.');
+    }
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="bg-gray-800 rounded-lg w-full max-w-md p-6 relative">
+        <button 
+          onClick={onClose}
+          className="absolute top-4 right-4 text-gray-400 hover:text-white"
+        >
+          ✕
+        </button>
+        <h2 className="text-xl font-bold mb-4">Contact Us</h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <input
+              type="text"
+              placeholder="Your Name"
+              className="w-full px-4 py-2 bg-gray-700 rounded-lg border border-gray-600 text-white placeholder-gray-400"
+              required
+              value={formData.name}
+              onChange={(e) => setFormData({...formData, name: e.target.value})}
+            />
+          </div>
+          <div>
+            <input
+              type="email"
+              placeholder="Your Email"
+              className="w-full px-4 py-2 bg-gray-700 rounded-lg border border-gray-600 text-white placeholder-gray-400"
+              required
+              value={formData.email}
+              onChange={(e) => setFormData({...formData, email: e.target.value})}
+            />
+          </div>
+          <div>
+            <textarea
+              placeholder="Your Message"
+              rows="4"
+              className="w-full px-4 py-2 bg-gray-700 rounded-lg border border-gray-600 text-white placeholder-gray-400"
+              required
+              value={formData.message}
+              onChange={(e) => setFormData({...formData, message: e.target.value})}
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full px-6 py-2 bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Send Message
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+};
+
 const LandingPage = () => {
   const [email, setEmail] = useState('');
   const [submitStatus, setSubmitStatus] = useState('');
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
     try {
-      const response = await fetch('https://formsubmit.co/mail@franzdoerr.com', {
+      const response = await fetch('https://formsubmit.co/franz@auterix.com', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -60,7 +148,8 @@ const LandingPage = () => {
         },
         body: JSON.stringify({
           email: email,
-          _subject: 'New Waitlist Signup from auterix'
+          _subject: 'New Waitlist Signup from auterix',
+          _cc: 'martin@auterix.com'
         })
       });
 
@@ -82,7 +171,10 @@ const LandingPage = () => {
         <nav className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="text-2xl font-bold lowercase">auterix</div>
-            <button className="px-6 py-2 bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors">
+            <button 
+              onClick={() => setIsContactModalOpen(true)}
+              className="px-6 py-2 bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
+            >
               Contact Us
             </button>
           </div>
@@ -91,10 +183,10 @@ const LandingPage = () => {
         <section className="container mx-auto px-6 py-24">
           <div className="max-w-3xl">
             <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              Dein Auto, Deine Regeln – Leasingoption nutzen, schnell und sicher verkaufen.
+              Dein Auto, deine Regeln – mit Leasingoption schneller verkaufen.
             </h1>
             <p className="text-lg md:text-xl text-gray-300 mb-8">
-              Mit auterix machst du dein Auto in wenigen Minuten leasbar und verkaufst problemlos in kurzer Zeit.
+              Mit auterix machst du dein Auto im Handumdrehen leasbar und erreichst einen schnelleren Verkauf.
             </p>
             <form onSubmit={handleSubmit} className="w-full max-w-md">
               <div className="flex flex-col sm:flex-row gap-2">
@@ -136,6 +228,10 @@ const LandingPage = () => {
           </div>
         </footer>
       </div>
+      <ContactModal 
+        isOpen={isContactModalOpen} 
+        onClose={() => setIsContactModalOpen(false)} 
+      />
     </div>
   );
 };
