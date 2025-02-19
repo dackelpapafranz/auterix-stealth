@@ -66,7 +66,7 @@ const ContactModal = ({ isOpen, onClose }) => {
         },
         body: JSON.stringify({
           ...formData,
-          _subject: 'New Contact Request from auterix',
+          _subject: `auterix Kontaktanfrage: ${formData.email}`,
           _cc: 'martin@auterix.com'
         })
       });
@@ -188,7 +188,7 @@ const LandingPage = () => {
         },
         body: JSON.stringify({
           email: email,
-          _subject: 'New Waitlist Signup from auterix',
+          _subject: `auterix Warteliste: ${email}`,
           _cc: 'martin@auterix.com'
         })
       });
@@ -234,7 +234,7 @@ const LandingPage = () => {
               <div className="flex flex-col sm:flex-row gap-2">
                 <input 
                   type="email" 
-                  placeholder="Gebe deine E-Mail-Adresse ein" 
+                  placeholder="Deine Email Adresse" 
                   className="flex-1 px-4 py-3 bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-lg focus:outline-none focus:border-blue-500 text-white placeholder-gray-400"
                   required
                   value={email}
