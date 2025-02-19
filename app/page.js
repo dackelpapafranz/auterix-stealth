@@ -1,9 +1,173 @@
 'use client';
 
-[Previous imports and StarryBackground component remain the same...]
+import React, { useEffect, useState } from 'react';
+
+const StarryBackground = () => {
+  const [stars, setStars] = useState([]);
+
+  useEffect(() => {
+    const generateStars = () => {
+      const newStars = [];
+      for (let i = 0; i < 100; i++) {
+        newStars.push({
+          id: i,
+          x: Math.random() * 100,
+          y: Math.random() * 100,
+          size: Math.random() * 2 + 1,
+          opacity: Math.random() * 0.5 + 0.3,
+          speed: Math.random() * 10 + 10
+        });
+      }
+      setStars(newStars);
+    };
+
+    generateStars();
+  }, []);
+
+  return (
+    <div className="fixed inset-0 overflow-hidden">
+      {stars.map((star) => (
+        <div
+          key={star.id}
+          className="absolute rounded-full bg-white animate-twinkle"
+          style={{
+            left: `${star.x}%`,
+            top: `${star.y}%`,
+            width: `${star.size}px`,
+            height: `${star.size}px`,
+            opacity: star.opacity,
+            animation: `twinkle ${star.speed}s infinite linear`
+          }}
+        />
+      ))}
+    </div>
+  );
+};
 
 const ContactModal = ({ isOpen, onClose }) => {
-  // Contact Modal code remains unchanged...
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    try {
+      const response = await fetch('https://formsubmit.co/ajax/franz@auterix.com', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          ...formData,
+          _subject: 'New Contact Request from auterix',
+          _cc: 'martin@auterix.com'
+        })
+      });
+
+      if (response.ok) {
+        setIsSuccess(true);
+      } else {
+        console.error('Form submission failed:', await response.text());
+        alert('Something went wrong. Please try again.');
+      }
+    } catch (error) {
+      console.error('Form submission error:', error);
+      alert('Something went wrong. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleClose = () => {
+    onClose();
+    // Reset form state after modal is closed
+    setTimeout(() => {
+      setFormData({ name: '', email: '', message: '' });
+      setIsSuccess(false);
+    }, 300);
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="bg-gray-800 rounded-lg w-full max-w-md p-6 relative">
+        <button 
+          onClick={handleClose}
+          className="absolute top-4 right-4 text-gray-400 hover:text-white"
+        >
+          ✕
+        </button>
+        
+        {isSuccess ? (
+          <div className="text-center py-8">
+            <h2 className="text-xl font-bold mb-4">Deine Nachricht wurde erfolgreich versandt.</h2>
+            <p className="text-gray-300">Unser Team meldet sich umgehend bei dir.</p>
+          </div>
+        ) : (
+          <>
+            <h2 className="text-xl font-bold mb-4">Kontakt</h2>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <input
+                  type="text"
+                  placeholder="Dein Name"
+                  className="w-full px-4 py-2 bg-gray-700 rounded-lg border border-gray-600 text-white placeholder-gray-400"
+                  required
+                  value={formData.name}
+                  onChange={(e) => setFormData({...formData, name: e.target.value})}
+                  disabled={isSubmitting}
+                />
+              </div>
+              <div>
+                <input
+                  type="email"
+                  placeholder="Deine E-Mail-Adresse"
+                  className="w-full px-4 py-2 bg-gray-700 rounded-lg border border-gray-600 text-white placeholder-gray-400"
+                  required
+                  value={formData.email}
+                  onChange={(e) => setFormData({...formData, email: e.target.value})}
+                  disabled={isSubmitting}
+                />
+              </div>
+              <div>
+                <textarea
+                  placeholder="Deine Nachricht"
+                  rows="4"
+                  className="w-full px-4 py-2 bg-gray-700 rounded-lg border border-gray-600 text-white placeholder-gray-400"
+                  required
+                  value={formData.message}
+                  onChange={(e) => setFormData({...formData, message: e.target.value})}
+                  disabled={isSubmitting}
+                />
+              </div>
+              <button
+                type="submit"
+                className="w-full px-6 py-2 bg-blue-600 rounded-lg hover:bg-blue-500 active:bg-blue-700 transition-colors duration-150 relative"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <div className="flex items-center justify-center">
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                    Wird gesendet...
+                  </div>
+                ) : (
+                  'Nachricht senden'
+                )}
+              </button>
+            </form>
+          </>
+        )}
+      </div>
+    </div>
+  );
 };
 
 const LandingPage = () => {
@@ -79,13 +243,7 @@ const LandingPage = () => {
                 />
                 <button 
                   type="submit" 
-                  className={`px-6 py-3 rounded-lg transition-colors duration-150 whitespace-nowrap ${
-                    submitStatus === 'success'
-                      ? 'bg-gray-600 cursor-not-allowed'
-                      : submitStatus === 'submitting'
-                      ? 'bg-blue-600'
-                      : 'bg-blue-600 hover:bg-blue-500 active:bg-blue-700'
-                  }`}
+                  className="px-6 py-3 bg-blue-600 rounded-lg hover:bg-blue-500 active:bg-blue-700 transition-colors duration-150 whitespace-nowrap disabled:bg-gray-600 disabled:cursor-not-allowed"
                   disabled={submitStatus === 'submitting' || submitStatus === 'success'}
                 >
                   {submitStatus === 'submitting' ? (
