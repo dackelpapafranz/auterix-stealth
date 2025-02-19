@@ -177,6 +177,7 @@ const LandingPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitStatus('submitting');
     
     try {
       const response = await fetch('https://formsubmit.co/ajax/franz@auterix.com', {
@@ -242,16 +243,27 @@ const LandingPage = () => {
                 <button 
                   type="submit" 
                   className="px-6 py-3 bg-blue-600 rounded-lg hover:bg-blue-500 active:bg-blue-700 transition-colors duration-150 whitespace-nowrap"
+                  disabled={submitStatus === 'submitting'}
                 >
-                  Join Waitlist
+                  {submitStatus === 'submitting' ? (
+                    <div className="flex items-center justify-center">
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                      Wird hinzugefügt...
+                    </div>
+                  ) : (
+                    'Warteliste beitreten'
+                  )}
                 </button>
               </div>
               <div className="mt-4">
                 {submitStatus === 'success' && (
-                  <p className="text-sm text-green-400">Thank you for joining our waitlist!</p>
+                  <div className="text-center py-4">
+                    <p className="text-lg text-green-400 font-semibold">Du wurdest erfolgreich hinzugefügt.</p>
+                    <p className="text-sm text-gray-300 mt-2">Unser Team meldet sich umgehend bei dir sobald wir live sind.</p>
+                  </div>
                 )}
                 {submitStatus === 'error' && (
-                  <p className="text-sm text-red-400">Something went wrong. Please try again.</p>
+                  <p className="text-sm text-red-400">Etwas ist schiefgelaufen. Bitte versuche es erneut.</p>
                 )}
                 {!submitStatus && (
                   <p className="text-sm text-gray-400">
